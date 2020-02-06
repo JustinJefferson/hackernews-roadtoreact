@@ -33,8 +33,22 @@ const list = [
     num_comments: 2,
     points: 5,
     objectID: 1
+  },
+  {
+    title: 'Civilization VI',
+    url: 'http://civilizatonvi.com/',
+    author: 'Angel M Mendoza',
+    num_comments: 180,
+    points: -9,
+    objectID: 2
   }
 ];
+
+function isSearched(searchTerm) {
+  return function (item) {
+    return item.title.toLowerCase().includes(searchTerm.toLowerCase());
+  }
+}
 
 class App extends Component {
   constructor(props){
@@ -44,10 +58,16 @@ class App extends Component {
       list,
       helloWorld,
       robin,
-      george
+      george,
+      searchTerm: '',
     }
 
     this.onDismiss = this.onDismiss.bind(this);
+    this.onSearchChange = this.onSearchChange.bind(this);
+  }
+
+  onSearchChange(event) {
+    this.setState({searchTerm: event.target.value})
   }
 
   onDismiss(id) {
@@ -58,12 +78,22 @@ class App extends Component {
   }
 
   render () {
+
+    const{ 
+      searchTerm,
+      list
+    } = this.state;
     
     return (
       <div className="App">
         <h2>{this.state.helloWorld}</h2>
         <p>The world is so reactable!</p>
-        {this.state.list.map(item => 
+
+        <form>
+          <input type="text" onChange={this.onSearchChange} />
+        </form>
+
+        {list.filter(isSearched(searchTerm)).map(item => 
           <div key={item.objectID}>
             <span>
               <a href={item.url}>{item.title}</a>
